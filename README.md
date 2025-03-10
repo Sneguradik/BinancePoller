@@ -61,14 +61,14 @@ dotnet run
 
 ### 🔹 **Запуск в Docker**
 
-1. Соберите Docker-образ:
+1. Соберите Docker-образ (Сборка производится из корня проекта):
 ```sh
-docker build -t binance-poller ./BinancePoller
+docker build -f BinancePoller\Dockerfile -t binancepoller .
 ```
 
 2. Запустите контейнер:
 ```sh
-docker run -e API_KEY=your_api_key -d binance-poller
+docker run --env API_KEY=<API_KEY> --name binancepoller binancepoller 
 ```
 
 

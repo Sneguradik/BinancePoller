@@ -17,7 +17,11 @@ public class IndexService(HttpClient httpClient, ILogger<IndexService> logger) :
     {
         var data = candles.Select(x => new IndexRequest()
         {
-            TimeStamp = x.CloseTime.ToString("O"),
+            TimeStamp = x.CloseTime
+                .AddMinutes(60 - x.CloseTime.Minute)
+                .AddSeconds(-x.CloseTime.Second)
+                .AddMilliseconds(-x.CloseTime.Millisecond)
+                .ToString("O"),
             Value = x.ClosePrice
         });
         var msg = new HttpRequestMessage(HttpMethod.Post, url)
