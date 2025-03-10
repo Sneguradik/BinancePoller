@@ -24,6 +24,7 @@ public class IndexService(HttpClient httpClient, ILogger<IndexService> logger) :
                 .ToString("O"),
             Value = x.ClosePrice
         });
+        foreach (var candle in data) logger.LogInformation($"Sending candles to {url}: {candle.TimeStamp}");
         var msg = new HttpRequestMessage(HttpMethod.Post, url)
         {
             Content = new StringContent(JsonSerializer.Serialize(data.ToArray())),
