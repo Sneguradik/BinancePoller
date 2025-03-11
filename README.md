@@ -62,6 +62,11 @@ dotnet run
 ### 🔹 **Запуск в Docker**
 
 1. Соберите Docker-образ (Сборка производится из корня проекта):
+- Windows:
+```sh
+docker build -f BinancePoller\Dockerfile -t binancepoller .
+```
+- Unix:
 ```sh
 docker build -f BinancePoller\Dockerfile -t binancepoller .
 ```

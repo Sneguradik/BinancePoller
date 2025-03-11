@@ -20,7 +20,7 @@ public class BinancePollerJob(IBinanceService binanceService, IIndexService inde
         var lastCandle = binanceCandles.Last();
         if (lastCandle.CloseTime > DateTime.UtcNow)
         {
-            stateService.LastUpdate[fetchItem.Symbol] = lastCandle.OpenTime;
+            stateService.LastUpdate[fetchItem.Symbol] = lastCandle.OpenTime.AddSeconds(-1);
             binanceCandles.Remove(lastCandle);
         }
         else stateService.LastUpdate[fetchItem.Symbol] = 
