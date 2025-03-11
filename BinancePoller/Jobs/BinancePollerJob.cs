@@ -14,9 +14,20 @@ public class BinancePollerJob(IBinanceService binanceService, IIndexService inde
             stateService.LastUpdate[fetchItem.Symbol].AddMilliseconds(1),
             DateTime.UtcNow, cancellationToken);
         if (candles is null) return;
-        var binanceCandles = candles.ToArray();
-        stateService.LastUpdate[fetchItem.Symbol] = binanceCandles.LastOrDefault()?.OpenTime.AddMilliseconds(1)??DateTime.UtcNow;
-        if(binanceCandles.Length == 0) return;
+        var binanceCandles = candles.ToList();
+        if (binanceCandles.Count == 0) return;
+        
+        var lastCandle = binanceCandles.Last();
+        if (lastCandle.CloseTime > DateTime.UtcNow)
+        {
+            stateService.LastUpdate[fetchItem.Symbol] = lastCandle.OpenTime;
+            binanceCandles.Remove(lastCandle);
+        }
+        else stateService.LastUpdate[fetchItem.Symbol] = 
+            binanceCandles
+                .LastOrDefault()?.OpenTime
+                .AddMilliseconds(1)??DateTime.UtcNow;
+        
         var result = await indexService.SendCandlesAsync(binanceCandles, fetchItem.Url, cancellationToken);
         if (result) logger.LogInformation($"{fetchItem.Symbol}: Successfully sent");
         else logger.LogError($"{fetchItem.Symbol}: Failed to send");
