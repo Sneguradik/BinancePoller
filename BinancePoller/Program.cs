@@ -11,7 +11,7 @@ builder.Services.AddQuartz(options =>
 {
     var jobKey = JobKey.Create(nameof(BinancePollerJob));
     options.AddJob<BinancePollerJob>(jobKey)
-        .AddTrigger(trigger => trigger.ForJob(jobKey).WithSimpleSchedule(x=>x.WithIntervalInHours(1).RepeatForever()));
+        .AddTrigger(trigger => trigger.ForJob(jobKey).WithCronSchedule("0 1 * * * *"));
 });
 builder.Services.AddQuartzHostedService();
 
